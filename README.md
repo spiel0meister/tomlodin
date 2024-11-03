@@ -1,6 +1,6 @@
 # tomlodin
 
-This are bindings for [tomlc99](https://github.com/cktan/tomlc99).
+These are bindings for [tomlc99](https://github.com/cktan/tomlc99).
 
 ## Testing
 
