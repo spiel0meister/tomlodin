@@ -28,12 +28,12 @@ Timestamp :: struct {
 
 Datum :: struct {
 	ok: bool,
-	u:  union {
-		^Timestamp,
-		cstring,
-		bool,
-		i64,
-		f64,
+	u:  struct #raw_union {
+		ts: ^Timestamp,
+		s:  cstring,
+		b:  bool,
+		i:  i64,
+		d:  f64,
 	},
 }
 
@@ -130,10 +130,11 @@ parse_test :: proc(t: ^testing.T) {
 
 	host := string_in(server, "host")
 	testing.expect(t, host.ok, "Host not found or is not a string")
+	if host.ok do testing.expect(t, host.u.s == "127.0.0.1", "Host must be \"127.0.0.1\"")
 
 	port := int_in(server, "port")
 	testing.expect(t, port.ok, "Port not found or is not an integer")
-	if port.ok do testing.expect(t, port.u.(i64) == 6969, "Port must be 6969")
+	if port.ok do testing.expect(t, port.u.i == 6969, "Port must be 6969")
 }
 
 @(test)
@@ -154,9 +155,9 @@ parse_file_test :: proc(t: ^testing.T) {
 
 	host := string_in(server, "host")
 	testing.expect(t, host.ok, "Host not found or is not a string")
-	if host.ok do testing.expect(t, host.u.(cstring) == "127.0.0.1", "Host must be \"127.0.0.1\"")
+	if host.ok do testing.expect(t, host.u.s == "127.0.0.1", "Host must be \"127.0.0.1\"")
 
 	port := int_in(server, "port")
 	testing.expect(t, port.ok, "Port not found or is not an integer")
-	if port.ok do testing.expect(t, port.u.(i64) == 6969, "Port must be 6969")
+	if port.ok do testing.expect(t, port.u.i == 6969, "Port must be 6969")
 }
